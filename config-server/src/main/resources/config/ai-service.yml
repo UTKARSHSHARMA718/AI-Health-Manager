@@ -1,0 +1,50 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: activity-processor-group
+      # Wrap your original deserializers here:
+      key-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      properties:
+        # Delegate the actual parsing to your target classes:
+        spring.deserializer.key.delegate.class: org.apache.kafka.common.serialization.StringDeserializer
+        spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+
+        # Keep your existing custom properties below:
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: com.fitness.ai_service.dtos.ActivityDto
+        spring.json.trusted.packages: "*"
+
+  #  kafka:
+  #    bootstrap-servers: localhost:9092
+  #    consumer:
+  #      group-id: activity-processor-group
+  #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  #      properties:
+  #        spring.json.use.type.headers: false
+  #        spring.json.value.default.type: com.fitness.ai_service.dtos.ActivityDto
+  #        spring.json.trusted.packages: "*"
+
+  mongodb:
+    uri: ${MONGO_DB_URL}
+    database: ${DATABASE_NAME}
+
+kafka:
+  topic:
+    name: activity-events
+
+open-ai:
+  url: ${OPEN_AI_URL}
+  api-key: ${OPEN_AI_KEY}
+  model: ${OPEN_AI_MODEL:gpt-5-mini}
+
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    serverUrl:
+      defaultZone: http://localhost:8761/eureka
